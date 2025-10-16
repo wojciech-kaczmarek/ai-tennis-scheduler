@@ -1,94 +1,125 @@
-# 10x Astro Starter
+# AI Tennis Scheduler
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+## Table of Contents
+1. [Project Description](#project-description)
+2. [Tech Stack](#tech-stack)
+3. [Getting Started Locally](#getting-started-locally)
+4. [Available Scripts](#available-scripts)
+5. [Project Scope (MVP)](#project-scope-mvp)
+6. [Project Status](#project-status)
+7. [License](#license)
+
+## Project Description
+
+The AI Tennis Scheduler is a web application designed to automate and optimize the creation of match schedules for amateur tennis tournaments. It addresses the challenges of manual scheduling, which is often time-consuming, prone to errors, and can result in unfair matchups. The application provides a simple, efficient tool for organizers, typically groups of friends, to generate fair and logical schedules for both singles and doubles play, saving time and enhancing the tournament experience for all participants.
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+The project is built with a modern, robust technology stack:
 
-## Prerequisites
+- **Frontend:**
+  - [Astro 5](https://astro.build/) for fast, content-focused websites.
+  - [React 19](https://react.dev/) for interactive UI components.
+  - [TypeScript 5](https://www.typescriptlang.org/) for static type-checking.
+  - [Tailwind CSS 4](https://tailwindcss.com/) for utility-first styling.
+  - [Shadcn/ui](https://ui.shadcn.com/) for accessible and reusable components.
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+- **Backend:**
+  - [Supabase](https://supabase.io/) as a comprehensive backend-as-a-service solution, providing:
+    - PostgreSQL Database
+    - User Authentication
+    - Auto-generated APIs
 
-## Getting Started
+- **AI Integration:**
+  - [OpenRouter.ai](https://openrouter.ai/) to leverage a wide range of AI models (from OpenAI, Anthropic, Google, etc.) for schedule generation and optimization.
 
-1. Clone the repository:
+- **CI/CD & Hosting:**
+  - [GitHub Actions](https://github.com/features/actions) for continuous integration and deployment pipelines.
+  - [DigitalOcean](https://www.digitalocean.com/) for application hosting via Docker containers.
 
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+## Getting Started Locally
 
-2. Install dependencies:
+To set up and run the project on your local machine, follow these steps:
 
-```bash
-npm install
-```
+### Prerequisites
 
-3. Run the development server:
+- **Node.js:** Version `22.14.0` is required. We recommend using a version manager like [nvm](https://github.com/nvm-sh/nvm).
+  ```bash
+  nvm use
+  ```
 
-```bash
-npm run dev
-```
+### Installation
 
-4. Build for production:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/wojciech-kaczmarek/ai-tennis-scheduler.git
+    cd ai-tennis-scheduler
+    ```
 
-```bash
-npm run build
-```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Set up environment variables:**
+    Create a `.env` file in the root of the project by copying the example file:
+    ```bash
+    cp .env.example .env
+    ```
+    Update the `.env` file with your credentials for Supabase and OpenRouter.
+    ```env
+    # Supabase
+    PUBLIC_SUPABASE_URL="your-supabase-url"
+    PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+
+    # OpenRouter
+    OPENROUTER_API_KEY="your-openrouter-api-key"
+    ```
+
+4.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:4321`.
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+The following scripts are available in the `package.json`:
 
-## Project Structure
+- `npm run dev`: Starts the development server with hot-reloading.
+- `npm run build`: Builds the application for production.
+- `npm run preview`: Serves the production build locally for previewing.
+- `npm run lint`: Lints the codebase for errors and style issues.
+- `npm run lint:fix`: Automatically fixes linting issues.
+- `npm run format`: Formats the code using Prettier.
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+## Project Scope (MVP)
 
-## AI Development Support
+### Key Features
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+- **Tournament Management:** Create, view, and delete tournaments.
+- **User Authentication:** Simple email and password-based registration and login.
+- **Schedule Generation:**
+  - Supports **singles** (round-robin) and **doubles** tournaments.
+  - The doubles algorithm maximizes unique player interactions (partners and opponents).
+  - Accommodates 4 to 24 players and 1 to 6 courts.
+- **Schedule Optimization:**
+  - The generation algorithm prioritizes avoiding back-to-back matches for players and maximizing court utilization.
+- **Manual Adjustments:** Users can preview the generated schedule and make minor edits (change court number, reorder matches).
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+### Out of Scope for MVP
 
-### Cursor IDE
+- Storing match results or scores.
+- Factoring in estimated match duration for scheduling.
+- Sharing schedules between different users.
+- Native mobile applications (the project is web-only).
+- Exporting schedules to file formats like PDF or CSV.
+- Auto-saving tournament drafts.
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+## Project Status
 
-### GitHub Copilot
-
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+**In Development:** The project is currently in the development phase, focusing on delivering the Minimum Viable Product (MVP) features.
 
 ## License
 
-MIT
+This project is licensed under the MIT License. See the `LICENSE` file for more details.

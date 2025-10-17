@@ -1,6 +1,7 @@
 # AI Tennis Scheduler
 
 ## Table of Contents
+
 1. [Project Description](#project-description)
 2. [Tech Stack](#tech-stack)
 3. [Getting Started Locally](#getting-started-locally)
@@ -51,22 +52,27 @@ To set up and run the project on your local machine, follow these steps:
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/wojciech-kaczmarek/ai-tennis-scheduler.git
     cd ai-tennis-scheduler
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     npm install
     ```
 
 3.  **Set up environment variables:**
     Create a `.env` file in the root of the project by copying the example file:
+
     ```bash
     cp .env.example .env
     ```
+
     Update the `.env` file with your credentials for Supabase and OpenRouter.
+
     ```env
     # Supabase
     PUBLIC_SUPABASE_URL="your-supabase-url"

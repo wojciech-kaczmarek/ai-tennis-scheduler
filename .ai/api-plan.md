@@ -14,8 +14,8 @@
 - **Description**: Retrieves a list of all tournaments created by the authenticated user.
 - **Query Parameters**:
   - `page` (optional, integer, default: 1): For pagination.
-  - `pageSize` (optional, integer, default: 10): For pagination.
-  - `sortBy` (optional, string, default: 'created_at'): Field to sort by.
+  - `page_size` (optional, integer, default: 10): For pagination.
+  - `sort_by` (optional, string, default: 'created_at'): Field to sort by.
   - `order` (optional, string, default: 'desc'): Sort order ('asc' or 'desc').
 - **Request Payload**: None.
 - **Response Payload**:
@@ -33,9 +33,9 @@
     ],
     "pagination": {
       "page": 1,
-      "pageSize": 10,
-      "totalItems": 1,
-      "totalPages": 1
+      "page_size": 10,
+      "total_items": 1,
+      "total_pages": 1
     }
   }
   ```

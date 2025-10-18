@@ -27,9 +27,9 @@ export type TournamentType = Enums<"tournament_type">;
  */
 export type PaginationDTO = {
   page: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
+  page_size: number;
+  total_items: number;
+  total_pages: number;
 };
 
 // ============================================================================

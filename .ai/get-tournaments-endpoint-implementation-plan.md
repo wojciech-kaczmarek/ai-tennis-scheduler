@@ -121,6 +121,3 @@ Retrieves a paginated, sorted list of tournaments owned by the authenticated use
 5. **Testing**
    - Unit tests for Zod schema and service logic
    - Integration test for the API route using a test Supabase instance
-6. **Documentation**
-   - Update README with endpoint spec
-   - Add JSDoc comments on service and handler

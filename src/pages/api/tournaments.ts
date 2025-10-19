@@ -1,6 +1,10 @@
 import type { APIRoute } from "astro";
-import { listTournamentsQuerySchema } from "../../lib/schemas/tournamentSchemas";
-import { getTournamentsForUser } from "../../lib/services/tournamentService";
+import { listTournamentsQuerySchema, createTournamentSchema } from "../../lib/schemas/tournamentSchemas";
+import {
+  getTournamentsForUser,
+  validateTournamentBusinessRules,
+  createTournamentWithSchedule,
+} from "../../lib/services/tournamentService";
 import { DEFAULT_USER_ID } from "@/db/supabase.client";
 
 /**
@@ -66,6 +70,100 @@ export const GET: APIRoute = async ({ request, locals }) => {
       JSON.stringify({
         error: "Internal Server Error",
         message: "An unexpected error occurred while fetching tournaments",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+};
+
+/**
+ * POST /api/tournaments
+ * Creates a complete tournament with players and schedule in a single atomic operation
+ *
+ * Request Body (JSON):
+ * - name (string): Tournament name
+ * - type (string): Tournament type ('singles' or 'doubles')
+ * - courts (number): Number of available courts
+ * - players (array): Array of player objects with name and placeholder_name
+ * - schedule (object): Schedule with matches array
+ *
+ * Returns:
+ * - 201: Tournament created successfully with summary
+ * - 400: Invalid request payload or malformed JSON
+ * - 401: User not authenticated
+ * - 422: Business validation failed
+ * - 500: Internal server error
+ */
+export const POST: APIRoute = async ({ request, locals }) => {
+  const userId = DEFAULT_USER_ID;
+
+  // Step 2: Parse request body
+  let requestBody;
+  try {
+    requestBody = await request.json();
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        error: "Invalid JSON payload: " + error,
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  // Step 3: Zod schema validation
+  const validationResult = createTournamentSchema.safeParse(requestBody);
+  if (!validationResult.success) {
+    return new Response(
+      JSON.stringify({
+        error: "Invalid request payload",
+        details: validationResult.error.errors.map((e) => `${e.path.join(".")}: ${e.message}`),
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  const validatedData = validationResult.data;
+
+  // Step 4: Business rules validation
+  const businessErrors = validateTournamentBusinessRules(validatedData);
+  if (businessErrors.length > 0) {
+    return new Response(
+      JSON.stringify({
+        error: "Validation failed",
+        details: businessErrors,
+      }),
+      {
+        status: 422,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  // Step 5: Create tournament via service
+  try {
+    const createdTournament = await createTournamentWithSchedule(userId, validatedData, locals.supabase);
+
+    return new Response(JSON.stringify(createdTournament), {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+        Location: `/api/tournaments/${createdTournament.id}`,
+      },
+    });
+  } catch (error) {
+    console.error("Tournament creation failed:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Failed to create tournament",
       }),
       {
         status: 500,

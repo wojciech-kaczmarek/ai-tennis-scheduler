@@ -1,5 +1,10 @@
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { TournamentListItemDTO, TournamentListResponseDTO } from "../../types";
+import type {
+  TournamentListItemDTO,
+  TournamentListResponseDTO,
+  CreateTournamentRequestDTO,
+  TournamentCreatedResponseDTO,
+} from "../../types";
 import type { ListTournamentsQuery } from "../schemas/tournamentSchemas";
 
 /**
@@ -49,4 +54,251 @@ export async function getTournamentsForUser(
       total_pages,
     },
   };
+}
+
+// ============================================================================
+// POST /api/tournaments - Create Tournament Functions
+// ============================================================================
+
+/**
+ * Validates business rules for tournament creation
+ * Returns array of error messages (empty if valid)
+ *
+ * This function performs comprehensive validation beyond schema validation:
+ * - Player count rules for singles/doubles
+ * - Court number validity
+ * - Match slot uniqueness
+ * - Player reference integrity
+ * - Team assignment rules
+ * - Match composition requirements
+ *
+ * @param data - Tournament creation request data
+ * @returns Array of validation error messages (empty if valid)
+ */
+export function validateTournamentBusinessRules(data: CreateTournamentRequestDTO): string[] {
+  const errors: string[] = [];
+
+  // Player count validation
+  if (data.type === "singles") {
+    if (data.players.length < 2) {
+      errors.push("Singles tournaments must have at least 2 players");
+    }
+    if (data.players.length % 2 !== 0) {
+      errors.push("Singles tournaments must have an even number of players");
+    }
+  }
+
+  if (data.type === "doubles") {
+    if (data.players.length < 4) {
+      errors.push("Doubles tournaments must have at least 4 players");
+    }
+    if (data.players.length % 4 !== 0) {
+      errors.push("Doubles tournaments must have a player count divisible by 4");
+    }
+  }
+
+  // Build player set for reference validation
+  const playerNames = new Set(data.players.map((p) => p.placeholder_name));
+
+  // Validate placeholder_name uniqueness
+  if (playerNames.size !== data.players.length) {
+    errors.push("Duplicate placeholder names found in players list");
+  }
+
+  // Validate match slots uniqueness
+  const matchSlots = new Set<string>();
+  for (const match of data.schedule.matches) {
+    const slotKey = `${match.court_number}-${match.match_order_on_court}`;
+    if (matchSlots.has(slotKey)) {
+      errors.push(`Duplicate match slot: court ${match.court_number}, order ${match.match_order_on_court}`);
+    }
+    matchSlots.add(slotKey);
+  }
+
+  // Validate each match
+  for (const match of data.schedule.matches) {
+    // Court number validation
+    if (match.court_number < 1 || match.court_number > data.courts) {
+      errors.push(`Invalid court number ${match.court_number}. Must be between 1 and ${data.courts}`);
+    }
+
+    // Player count validation
+    const expectedPlayerCount = data.type === "singles" ? 2 : 4;
+    if (match.players.length !== expectedPlayerCount) {
+      errors.push(
+        `Match on court ${match.court_number}, order ${match.match_order_on_court} has ${match.players.length} players, expected ${expectedPlayerCount}`
+      );
+    }
+
+    // Validate player references
+    for (const mp of match.players) {
+      if (!playerNames.has(mp.placeholder_name)) {
+        errors.push(`Player '${mp.placeholder_name}' in match not found in players list`);
+      }
+    }
+
+    // Team validation
+    if (data.type === "singles") {
+      const invalidTeams = match.players.filter((p) => p.team !== null);
+      if (invalidTeams.length > 0) {
+        errors.push(`Singles match on court ${match.court_number} has team assignments (should be null)`);
+      }
+    }
+
+    if (data.type === "doubles") {
+      const teams = match.players.map((p) => p.team);
+      const team1Count = teams.filter((t) => t === 1).length;
+      const team2Count = teams.filter((t) => t === 2).length;
+      const invalidTeams = teams.filter((t) => t !== 1 && t !== 2);
+
+      if (invalidTeams.length > 0) {
+        errors.push(`Doubles match on court ${match.court_number} has invalid team values (must be 1 or 2)`);
+      }
+      if (team1Count !== 2 || team2Count !== 2) {
+        errors.push(`Doubles match on court ${match.court_number} must have exactly 2 players per team`);
+      }
+    }
+  }
+
+  // Validate all players are referenced
+  const referencedPlayers = new Set<string>();
+  for (const match of data.schedule.matches) {
+    for (const mp of match.players) {
+      referencedPlayers.add(mp.placeholder_name);
+    }
+  }
+  for (const playerName of playerNames) {
+    if (!referencedPlayers.has(playerName)) {
+      errors.push(`Player '${playerName}' is not referenced in any match`);
+    }
+  }
+
+  return errors;
+}
+
+/**
+ * Creates a tournament with players and schedule in a single transaction
+ *
+ * This function performs a complex multi-table insertion across 5 tables:
+ * 1. tournaments - Main tournament record
+ * 2. players - All tournament players
+ * 3. schedules - Schedule container
+ * 4. matches - All match records
+ * 5. match_players - Player-to-match associations
+ *
+ * The operation is designed to be atomic - if any step fails, the entire
+ * operation is rolled back by deleting the tournament record (which cascades).
+ *
+ * @param userId - ID of the authenticated user creating the tournament
+ * @param data - Complete tournament creation data
+ * @param supabase - Supabase client instance
+ * @returns Created tournament summary
+ * @throws Error if any database operation fails
+ */
+export async function createTournamentWithSchedule(
+  userId: string,
+  data: CreateTournamentRequestDTO,
+  supabase: SupabaseClient
+): Promise<TournamentCreatedResponseDTO> {
+  // Step 1: Insert tournament
+  const { data: tournament, error: tournamentError } = await supabase
+    .from("tournaments")
+    .insert({
+      user_id: userId,
+      name: data.name,
+      type: data.type,
+      courts: data.courts,
+      players_count: data.players.length,
+    })
+    .select("id, name, type, players_count, courts, created_at")
+    .single();
+
+  if (tournamentError || !tournament) {
+    throw new Error(`Failed to create tournament: ${tournamentError?.message}`);
+  }
+
+  try {
+    // Step 2: Insert players and build mapping
+    const { data: players, error: playersError } = await supabase
+      .from("players")
+      .insert(
+        data.players.map((p) => ({
+          tournament_id: tournament.id,
+          name: p.name,
+          placeholder_name: p.placeholder_name,
+        }))
+      )
+      .select("id, placeholder_name");
+
+    if (playersError || !players) {
+      throw new Error(`Failed to create players: ${playersError?.message}`);
+    }
+
+    // Build placeholder_name → player_id mapping
+    const playerMap = new Map<string, string>(players.map((p) => [p.placeholder_name, p.id]));
+
+    // Step 3: Insert schedule
+    const { data: schedule, error: scheduleError } = await supabase
+      .from("schedules")
+      .insert({
+        tournament_id: tournament.id,
+      })
+      .select("id")
+      .single();
+
+    if (scheduleError || !schedule) {
+      throw new Error(`Failed to create schedule: ${scheduleError?.message}`);
+    }
+
+    // Step 4: Insert matches
+    const { data: matches, error: matchesError } = await supabase
+      .from("matches")
+      .insert(
+        data.schedule.matches.map((m) => ({
+          schedule_id: schedule.id,
+          court_number: m.court_number,
+          match_order_on_court: m.match_order_on_court,
+        }))
+      )
+      .select("id");
+
+    if (matchesError || !matches) {
+      throw new Error(`Failed to create matches: ${matchesError?.message}`);
+    }
+
+    // Step 5: Insert match-players
+    const matchPlayerInserts = data.schedule.matches.flatMap((match, matchIdx) =>
+      match.players.map((mp) => {
+        const playerId = playerMap.get(mp.placeholder_name);
+        if (!playerId) {
+          throw new Error(`Player ID not found for placeholder: ${mp.placeholder_name}`);
+        }
+        return {
+          match_id: matches[matchIdx].id,
+          player_id: playerId,
+          team: mp.team,
+        };
+      })
+    );
+
+    const { error: matchPlayersError } = await supabase.from("match_players").insert(matchPlayerInserts);
+
+    if (matchPlayersError) {
+      throw new Error(`Failed to create match players: ${matchPlayersError.message}`);
+    }
+
+    // Return created tournament
+    return {
+      id: tournament.id,
+      name: tournament.name,
+      type: tournament.type,
+      players_count: tournament.players_count,
+      courts: tournament.courts,
+      created_at: tournament.created_at,
+    };
+  } catch (error) {
+    // Cleanup: Delete tournament (cascade will remove all related records)
+    await supabase.from("tournaments").delete().eq("id", tournament.id);
+    throw error;
+  }
 }

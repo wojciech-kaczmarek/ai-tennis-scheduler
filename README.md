@@ -108,7 +108,7 @@ The following scripts are available in the `package.json`:
 - **Schedule Generation:**
   - Supports **singles** (round-robin) and **doubles** tournaments.
   - The doubles algorithm maximizes unique player interactions (partners and opponents).
-  - Accommodates 4 to 24 players and 1 to 6 courts.
+  - Accommodates 2 to 24 players and 1 to 6 courts.
 - **Schedule Optimization:**
   - The generation algorithm prioritizes avoiding back-to-back matches for players and maximizing court utilization.
 - **Manual Adjustments:** Users can preview the generated schedule and make minor edits (change court number, reorder matches).

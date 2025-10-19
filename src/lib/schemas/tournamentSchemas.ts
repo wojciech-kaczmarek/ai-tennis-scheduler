@@ -19,3 +19,60 @@ export const listTournamentsQuerySchema = z.object({
 });
 
 export type ListTournamentsQuery = z.infer<typeof listTournamentsQuerySchema>;
+
+// ============================================================================
+// POST /api/tournaments - Create Tournament Schemas
+// ============================================================================
+
+/**
+ * Player schema for tournament creation
+ * Validates player data with optional name and required placeholder_name
+ */
+const createTournamentPlayerSchema = z.object({
+  name: z.string().max(100).nullable(),
+  placeholder_name: z.string().min(1).max(50),
+});
+
+/**
+ * Match player reference schema
+ * Validates player references within matches
+ */
+const createTournamentMatchPlayerSchema = z.object({
+  placeholder_name: z.string().min(1).max(50),
+  team: z.number().int().min(1).max(2).nullable(),
+});
+
+/**
+ * Match schema for tournament creation
+ * Validates match structure with court assignment and players
+ */
+const createTournamentMatchSchema = z.object({
+  court_number: z.number().int().positive(),
+  match_order_on_court: z.number().int().positive(),
+  players: z.array(createTournamentMatchPlayerSchema).min(2).max(4),
+});
+
+/**
+ * Schedule schema for tournament creation
+ * Validates schedule structure with matches array
+ */
+const createTournamentScheduleSchema = z.object({
+  matches: z.array(createTournamentMatchSchema).min(1).max(100),
+});
+
+/**
+ * Main tournament creation schema
+ * Validates complete tournament creation request payload
+ */
+export const createTournamentSchema = z.object({
+  name: z.string().min(1).max(200).trim(),
+  type: z.enum(["singles", "doubles"]),
+  courts: z.number().int().min(1).max(6),
+  players: z.array(createTournamentPlayerSchema).min(2).max(24),
+  schedule: createTournamentScheduleSchema,
+});
+
+/**
+ * Type inference for tournament creation schema
+ */
+export type CreateTournamentSchemaType = z.infer<typeof createTournamentSchema>;

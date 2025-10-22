@@ -31,6 +31,7 @@ export async function getTournamentsForUser(
   const { data, count, error } = await supabase
     .from("tournaments")
     .select("id, name, type, players_count, courts, created_at", { count: "exact" })
+    .filter("user_id", "eq", userId)
     .order(sort_by, { ascending: order === "asc" })
     .range(from, to);
 

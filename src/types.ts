@@ -203,7 +203,11 @@ export interface GeneratedScheduleDTO {
  * Allows updating court assignment and match order
  * Derived from MatchEntity Update type
  */
-export type UpdateMatchDTO = Pick<MatchEntity, "id"> & Pick<MatchEntity, "court_number" | "match_order_on_court">;
+export interface UpdateMatchDTO {
+  match_id: string;
+  court_number: number;
+  match_order_on_court: number;
+}
 
 /**
  * Request payload for PATCH /api/schedules/{id}/matches

@@ -25,12 +25,12 @@ export type TournamentType = Enums<"tournament_type">;
 /**
  * Pagination metadata for list responses
  */
-export type PaginationDTO = {
+export interface PaginationDTO {
   page: number;
   page_size: number;
   total_items: number;
   total_pages: number;
-};
+}
 
 // ============================================================================
 // GET /api/tournaments - List Tournaments
@@ -48,10 +48,10 @@ export type TournamentListItemDTO = Pick<
 /**
  * Response payload for GET /api/tournaments
  */
-export type TournamentListResponseDTO = {
+export interface TournamentListResponseDTO {
   data: TournamentListItemDTO[];
   pagination: PaginationDTO;
-};
+}
 
 // ============================================================================
 // POST /api/tournaments - Create Tournament
@@ -68,10 +68,10 @@ export type CreateTournamentPlayerDTO = Pick<PlayerEntity, "name" | "placeholder
  * Uses placeholder_name to identify players before they're persisted
  * team is required for doubles, null for singles
  */
-export type CreateTournamentMatchPlayerDTO = {
+export interface CreateTournamentMatchPlayerDTO {
   placeholder_name: string;
   team: number | null;
-};
+}
 
 /**
  * Match definition during tournament creation (without database-generated fields)
@@ -85,9 +85,9 @@ export type CreateTournamentMatchDTO = Pick<MatchEntity, "court_number" | "match
  * Schedule definition during tournament creation
  * Non-persistent structure that will be saved to database
  */
-export type CreateTournamentScheduleDTO = {
+export interface CreateTournamentScheduleDTO {
   matches: CreateTournamentMatchDTO[];
-};
+}
 
 /**
  * Request payload for POST /api/tournaments
@@ -164,10 +164,10 @@ export type GenerateSchedulePlayerDTO = CreateTournamentPlayerDTO;
  * Player reference in a generated (non-persisted) match
  * Uses placeholder_name since players aren't persisted yet
  */
-export type GenerateScheduleMatchPlayerDTO = {
+export interface GenerateScheduleMatchPlayerDTO {
   placeholder_name: string;
   team: number | null;
-};
+}
 
 /**
  * Match structure in a generated (non-persisted) schedule
@@ -180,19 +180,19 @@ export type GenerateScheduleMatchDTO = Pick<MatchEntity, "court_number" | "match
 /**
  * Request payload for POST /api/schedules/generate
  */
-export type GenerateScheduleRequestDTO = {
+export interface GenerateScheduleRequestDTO {
   type: TournamentType;
   courts: number;
   players: GenerateSchedulePlayerDTO[];
-};
+}
 
 /**
  * Response payload for POST /api/schedules/generate
  * Returns generated schedule preview (not persisted to database)
  */
-export type GeneratedScheduleDTO = {
+export interface GeneratedScheduleDTO {
   matches: GenerateScheduleMatchDTO[];
-};
+}
 
 // ============================================================================
 // PATCH /api/schedules/{id}/matches - Update Schedule Matches
@@ -209,15 +209,15 @@ export type UpdateMatchDTO = Pick<MatchEntity, "id"> & Pick<MatchEntity, "court_
  * Request payload for PATCH /api/schedules/{id}/matches
  * Allows bulk updates to multiple matches in a single transaction
  */
-export type UpdateScheduleMatchesRequestDTO = {
+export interface UpdateScheduleMatchesRequestDTO {
   updates: UpdateMatchDTO[];
-};
+}
 
 /**
  * Response payload for PATCH /api/schedules/{id}/matches
  * Returns the schedule ID and list of successfully updated match IDs
  */
-export type UpdateScheduleMatchesResponseDTO = {
+export interface UpdateScheduleMatchesResponseDTO {
   schedule_id: string;
   updated_matches: string[];
-};
+}

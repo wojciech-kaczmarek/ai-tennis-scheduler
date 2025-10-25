@@ -1,8 +1,4 @@
-import type {
-  GenerateScheduleRequestDTO,
-  GeneratedScheduleDTO,
-  GenerateScheduleMatchDTO,
-} from "../../types";
+import type { GenerateScheduleRequestDTO, GeneratedScheduleDTO, GenerateScheduleMatchDTO } from "../../types";
 
 /**
  * Schedule Service
@@ -21,9 +17,7 @@ import type {
  * 3. Maximize court utilization
  * 4. For doubles: maximize unique partner/opponent combinations
  */
-export async function generateSchedule(
-  config: GenerateScheduleRequestDTO
-): Promise<GeneratedScheduleDTO> {
+export async function generateSchedule(config: GenerateScheduleRequestDTO): Promise<GeneratedScheduleDTO> {
   const { type, courts, players } = config;
 
   if (type === "singles") {

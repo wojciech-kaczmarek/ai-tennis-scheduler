@@ -303,3 +303,39 @@ export async function createTournamentWithSchedule(
     throw error;
   }
 }
+
+// ============================================================================
+// DELETE /api/tournaments/{id} - Delete Tournament Function
+// ============================================================================
+
+/**
+ * Deletes a tournament and all associated data via cascading delete
+ *
+ * This function performs a single DELETE operation on the tournaments table.
+ * PostgreSQL automatically cascades the deletion to related tables:
+ * - schedules (via tournament_id FK)
+ * - matches (via schedule_id FK)
+ * - match_players (via match_id FK)
+ * - players (via tournament_id FK)
+ *
+ * Row-Level Security (RLS) ensures users can only delete their own tournaments.
+ *
+ * @param supabase - Supabase client instance with user context
+ * @param tournamentId - UUID of the tournament to delete
+ * @returns true if tournament was deleted, false if not found or unauthorized
+ * @throws Error if database operation fails unexpectedly
+ */
+export async function deleteTournament(supabase: SupabaseClient, tournamentId: string): Promise<boolean> {
+  const { error, count } = await supabase
+    .from("tournaments")
+    .delete({ count: "exact" })
+    .eq("id", tournamentId)
+    .select();
+
+  if (error) {
+    throw new Error(`Failed to delete tournament: ${error.message}`);
+  }
+
+  // count will be 0 if tournament doesn't exist or user doesn't own it (RLS)
+  return (count ?? 0) > 0;
+}

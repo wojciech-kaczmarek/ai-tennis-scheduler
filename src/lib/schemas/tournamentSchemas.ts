@@ -76,3 +76,20 @@ export const createTournamentSchema = z.object({
  * Type inference for tournament creation schema
  */
 export type CreateTournamentSchemaType = z.infer<typeof createTournamentSchema>;
+
+// ============================================================================
+// DELETE /api/tournaments/{id} - Delete Tournament Schema
+// ============================================================================
+
+/**
+ * Path parameter schema for DELETE /api/tournaments/{id}
+ * Validates tournament ID is a valid UUID
+ */
+export const deleteTournamentParamsSchema = z.object({
+  id: z.string().uuid("Invalid tournament ID format"),
+});
+
+/**
+ * Type inference for delete tournament path parameters
+ */
+export type DeleteTournamentParams = z.infer<typeof deleteTournamentParamsSchema>;

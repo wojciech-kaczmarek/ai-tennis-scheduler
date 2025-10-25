@@ -93,3 +93,20 @@ export const deleteTournamentParamsSchema = z.object({
  * Type inference for delete tournament path parameters
  */
 export type DeleteTournamentParams = z.infer<typeof deleteTournamentParamsSchema>;
+
+// ============================================================================
+// GET /api/tournaments/{id} - Get Tournament Details Schema
+// ============================================================================
+
+/**
+ * Path parameter schema for GET /api/tournaments/{id}
+ * Validates tournament ID is a valid UUID
+ */
+export const getTournamentParamsSchema = z.object({
+  id: z.string().uuid({ message: "Invalid tournament ID format" }),
+});
+
+/**
+ * Type inference for get tournament path parameters
+ */
+export type GetTournamentParams = z.infer<typeof getTournamentParamsSchema>;

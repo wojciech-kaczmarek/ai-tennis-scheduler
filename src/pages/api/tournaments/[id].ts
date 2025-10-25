@@ -1,32 +1,30 @@
 import type { APIRoute } from "astro";
-import { deleteTournamentParamsSchema } from "../../../lib/schemas/tournamentSchemas";
-import { deleteTournament } from "../../../lib/services/tournamentService";
+import { getTournamentParamsSchema, deleteTournamentParamsSchema } from "../../../lib/schemas/tournamentSchemas";
+import { getTournamentById, deleteTournament } from "../../../lib/services/tournamentService";
 
 /**
- * DELETE /api/tournaments/{id}
- * Deletes a tournament and all associated data (players, schedule, matches)
+ * GET /api/tournaments/{id}
+ * Retrieves complete details of a single tournament including players and schedule
  *
  * Path Parameters:
- * - id (required): UUID of the tournament to delete
+ * - id: Tournament UUID
  *
  * Returns:
- * - 204: Tournament deleted successfully (no content)
+ * - 200: Complete tournament details with players and schedule
  * - 400: Invalid tournament ID format
  * - 401: User not authenticated
- * - 404: Tournament not found or user not authorized
+ * - 404: Tournament not found or user doesn't own it
  * - 500: Internal server error
  */
-export const DELETE: APIRoute = async ({ params, locals }) => {
+export const GET: APIRoute = async ({ params, locals }) => {
   try {
-    // Step 1: Validate path parameter
-    const validation = deleteTournamentParamsSchema.safeParse(params);
+    // Step 1: Extract and validate path parameter
+    const validation = getTournamentParamsSchema.safeParse(params);
 
     if (!validation.success) {
       return new Response(
         JSON.stringify({
-          error: "Bad Request",
-          message: "Invalid tournament ID format",
-          details: validation.error.format(),
+          error: "Invalid tournament ID format",
         }),
         {
           status: 400,
@@ -37,36 +35,14 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
 
     const { id } = validation.data;
 
-    // Step 2: Verify authentication
-    const {
-      data: { user },
-      error: authError,
-    } = await locals.supabase.auth.getUser();
+    // Step 2: Call service to fetch tournament details
+    const tournament = await getTournamentById(locals.supabase, id);
 
-    if (authError || !user) {
+    // Step 3: Return 404 if tournament not found or user doesn't own it
+    if (!tournament) {
       return new Response(
         JSON.stringify({
-          error: "Unauthorized",
-          message: "Authentication required",
-        }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Step 3: Delete tournament via service
-    const deleted = await deleteTournament(locals.supabase, id);
-
-    // Step 4: Return appropriate response
-    if (!deleted) {
-      // Tournament doesn't exist or user doesn't own it
-      // Return 404 for both cases (don't reveal existence)
-      return new Response(
-        JSON.stringify({
-          error: "Not Found",
-          message: "Tournament not found",
+          error: "Tournament not found",
         }),
         {
           status: 404,
@@ -75,18 +51,102 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       );
     }
 
-    // Success - return 204 No Content
+    // Step 4: Return successful response with caching headers
+    return new Response(JSON.stringify(tournament), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "private, max-age=60",
+      },
+    });
+  } catch (error) {
+    // Step 5: Handle unexpected errors
+    console.error("Error in GET /api/tournaments/[id]:", {
+      endpoint: "GET /api/tournaments/[id]",
+      tournament_id: params.id,
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
+
+    return new Response(
+      JSON.stringify({
+        error: "Internal server error",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+};
+
+/**
+ * DELETE /api/tournaments/{id}
+ * Deletes a tournament and all associated data (players, schedule, matches)
+ *
+ * Path Parameters:
+ * - id: Tournament UUID
+ *
+ * Returns:
+ * - 204: Tournament deleted successfully (no content)
+ * - 400: Invalid tournament ID format
+ * - 401: User not authenticated
+ * - 404: Tournament not found or user doesn't own it
+ * - 500: Internal server error
+ */
+export const DELETE: APIRoute = async ({ params, locals }) => {
+  try {
+    // Step 1: Extract and validate path parameter
+    const validation = deleteTournamentParamsSchema.safeParse(params);
+
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid tournament ID format",
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const { id } = validation.data;
+
+    // Step 2: Call service to delete tournament
+    const deleted = await deleteTournament(locals.supabase, id);
+
+    // Step 3: Return 404 if tournament not found or user doesn't own it
+    if (!deleted) {
+      return new Response(
+        JSON.stringify({
+          error: "Tournament not found",
+        }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Step 4: Return successful response (204 No Content)
     return new Response(null, {
       status: 204,
     });
   } catch (error) {
     // Step 5: Handle unexpected errors
-    console.error("Error deleting tournament:", error);
+    console.error("Error in DELETE /api/tournaments/[id]:", {
+      endpoint: "DELETE /api/tournaments/[id]",
+      tournament_id: params.id,
+      error: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
 
     return new Response(
       JSON.stringify({
-        error: "Internal Server Error",
-        message: "An unexpected error occurred while deleting tournament",
+        error: "Internal server error",
       }),
       {
         status: 500,

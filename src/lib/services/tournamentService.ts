@@ -406,9 +406,8 @@ export async function getTournamentById(
     return null;
   }
 
-  // Extract schedule (Supabase returns it as an array even though it's one-to-one)
-  const schedules = tournamentData.schedules as { id: string }[] | null;
-  const schedule = schedules?.[0];
+  // Extract schedule
+  const schedule = tournamentData.schedules as { id: string } | null;
   if (!schedule) {
     return null;
   }

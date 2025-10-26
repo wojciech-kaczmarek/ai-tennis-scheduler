@@ -1,0 +1,26 @@
+---
+// ============================================================================
+// Tournament Details Page
+// ============================================================================
+// Dynamic page for viewing and editing tournament details
+
+import Layout from "../../layouts/Layout.astro";
+import { TournamentDetails } from "../../components/TournamentDetails";
+
+// Extract tournament ID from route parameters
+const { id } = Astro.params;
+
+// Validate that ID exists
+if (!id) {
+  // Redirect to dashboard if ID is missing
+  return Astro.redirect("/");
+}
+
+// Page title
+const pageTitle = "Tournament Details | Tennis Scheduler";
+---
+
+<Layout title={pageTitle}>
+  <TournamentDetails client:load tournamentId={id} />
+</Layout>
+

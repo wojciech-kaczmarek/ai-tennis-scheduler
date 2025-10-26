@@ -43,10 +43,10 @@ The application is a single-page Astro web app with React islands for dynamic in
 
 ### Tournament Details
 - Path: `/tournaments/[id]`
-- Purpose: Review and edit existing tournament: players and finalized schedule.
-- Key Information: Shadcn/ui Tabs (Players, Schedule), player list with editable names, schedule grid identical to preview.
-- Components: ProtectedRoute, `PlayersTab` with inline edit fields + Save buttons, `ScheduleTab` reusing ScheduleGrid and update hook.
-- Considerations: Debounce name edits, explicit Save buttons, rollback on API error, accessible tab panels.
+- Purpose: Review and edit existing tournament: court assignments and match order for multiple matches in a schedule.
+- Key Information: schedule grid identical to preview.
+- Components: ProtectedRoute, `ScheduleTab` reusing ScheduleGrid and update hook.
+- Considerations: rollback on API error.
 
 ### Error & Fallback Pages
 - Path: `*`

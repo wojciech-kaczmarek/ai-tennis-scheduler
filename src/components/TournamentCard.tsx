@@ -25,10 +25,28 @@ export function TournamentCard({ tournament, onDelete }: TournamentCardProps) {
       : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
   };
 
+  const handleCardClick = () => {
+    window.location.href = `/tournaments/${tournament.id}`;
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click when deleting
+    onDelete(tournament.id);
+  };
+
   return (
     <article
-      className="relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+      className="relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800 cursor-pointer"
       aria-label={`Tournament: ${tournament.name}`}
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
     >
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
@@ -45,7 +63,7 @@ export function TournamentCard({ tournament, onDelete }: TournamentCardProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => onDelete(tournament.id)}
+          onClick={handleDeleteClick}
           aria-label={`Delete tournament ${tournament.name}`}
           className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
         >

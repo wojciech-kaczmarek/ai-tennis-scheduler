@@ -220,3 +220,4 @@ Approach 3 is the clear winner for this use case:
 
 The small cost of 2 additional database queries is vastly outweighed by the massive reduction in data transfer and improved scalability.
 
+

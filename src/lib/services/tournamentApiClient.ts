@@ -82,3 +82,4 @@ export async function deleteTournament(id: string): Promise<void> {
 
   // DELETE returns 204 No Content, no need to parse response
 }
+

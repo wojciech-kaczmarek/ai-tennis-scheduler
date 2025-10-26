@@ -1,5 +1,6 @@
 import { Squares2X2Icon, PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
+import { clearWizardStorage } from "@/lib/wizardStorage";
 
 /**
  * Empty state component displayed when no tournaments exist
@@ -22,7 +23,7 @@ export function DashboardEmptyState() {
 
       {/* Call to action button */}
       <Button asChild variant="default" size="lg">
-        <a href="/create" aria-label="Create your first tournament">
+        <a href="/create" onClick={clearWizardStorage} aria-label="Create your first tournament">
           <PlusIcon />
           Create Tournament
         </a>

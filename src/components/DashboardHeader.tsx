@@ -1,5 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
+import { clearWizardStorage } from "@/lib/wizardStorage";
 
 /**
  * Reusable header component for the Dashboard page
@@ -13,7 +14,7 @@ export function DashboardHeader() {
         <p className="mt-2 text-gray-600 dark:text-gray-400">Manage and view all your tennis tournaments</p>
       </div>
       <Button asChild variant="default">
-        <a href="/create" aria-label="Create new tournament">
+        <a href="/create" onClick={clearWizardStorage} aria-label="Create new tournament">
           <PlusIcon />
           Create Tournament
         </a>
@@ -21,4 +22,3 @@ export function DashboardHeader() {
     </div>
   );
 }
-

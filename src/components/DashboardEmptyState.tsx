@@ -1,4 +1,5 @@
-import { Squares2X2Icon } from "@heroicons/react/24/outline";
+import { Squares2X2Icon, PlusIcon } from "@heroicons/react/24/outline";
+import { Button } from "@/components/ui/button";
 
 /**
  * Empty state component displayed when no tournaments exist
@@ -19,11 +20,13 @@ export function DashboardEmptyState() {
         Get started by creating your first tournament with players, courts, and match schedules.
       </p>
 
-      {/* Optional: Call to action button (commented out for now, can be enabled when create tournament page is ready) */}
-      {/* <Button onClick={onCreate} variant="default">
-        <PlusIcon className="mr-2 h-4 w-4" />
-        Create Tournament
-      </Button> */}
+      {/* Call to action button */}
+      <Button asChild variant="default" size="lg">
+        <a href="/create" aria-label="Create your first tournament">
+          <PlusIcon />
+          Create Tournament
+        </a>
+      </Button>
     </div>
   );
 }

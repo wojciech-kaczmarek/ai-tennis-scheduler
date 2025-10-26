@@ -5,6 +5,7 @@ import { TournamentCard } from "@/components/TournamentCard";
 import { DeleteConfirmationDialog } from "@/components/DeleteConfirmationDialog";
 import { PaginationControls } from "@/components/PaginationControls";
 import { DashboardEmptyState } from "@/components/DashboardEmptyState";
+import { DashboardHeader } from "@/components/DashboardHeader";
 import type { TournamentListItemDTO } from "@/types";
 import { ExclamationTriangleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -76,10 +77,7 @@ export function DashboardPage() {
   if (loading && !data) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Tournaments</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">Manage and view all your tennis tournaments</p>
-        </div>
+        <DashboardHeader />
         <div
           className="flex min-h-[400px] items-center justify-center"
           role="status"
@@ -99,9 +97,7 @@ export function DashboardPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Tournaments</h1>
-        </div>
+        <DashboardHeader />
         <div
           className="rounded-lg border border-red-300 bg-red-50 p-6 dark:border-red-700 dark:bg-red-900/20"
           role="alert"
@@ -135,10 +131,7 @@ export function DashboardPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Tournaments</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">Manage and view all your tennis tournaments</p>
-      </div>
+      <DashboardHeader />
 
       {/* Main content area */}
       {isEmpty ? (

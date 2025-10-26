@@ -10,6 +10,7 @@ The Dashboard view displays a paginated grid of the authenticated user’s tourn
 ## 3. Component Structure
 ```
 DashboardPage
+├── DashboardHeader
 ├── TournamentGrid
 │   ├── TournamentCard (repeat)
 │   │   └── DeleteConfirmationDialog
@@ -21,10 +22,17 @@ DashboardPage
 
 ### DashboardPage
 - Description: Orchestrates data fetching, state management, and renders child components.
-- Main elements: header, conditional content area (grid or empty state), footer with pagination.
+- Main elements: DashboardHeader, conditional content area (grid or empty state), footer with pagination.
 - Handled events: fetch on mount, onPageChange, onPageSizeChange, onDeleteTournament.
 - Validation: enforce `page >= 1` and `page_size` within [1, 100].
 - Types: `DashboardViewModel` (items: `TournamentListItemDTO[]`, pagination: `PaginationDTO`).
+- Props: none.
+
+### DashboardHeader
+- Description: Reusable header component displaying page title, description, and "Create Tournament" button.
+- Main elements: page title ("My Tournaments"), description text, Shadcn/ui Button with navigation link to `/create`.
+- Handled events: navigation via anchor tag to `/create` path.
+- Validation: none.
 - Props: none.
 
 ### TournamentCard
@@ -63,8 +71,8 @@ DashboardPage
 
 ### DashboardEmptyState
 - Description: Displayed when no tournaments are returned.
-- Main elements: message icon (Heroicons), text, optional link/button to create a new tournament.
-- Handled events: none or optional `onCreate`.
+- Main elements: message icon (Heroicons Squares2X2Icon), text, Shadcn/ui Button with navigation link to `/create`.
+- Handled events: navigation via anchor tag to `/create` path.
 - Props: none.
 
 ## 5. Types
@@ -114,12 +122,13 @@ DashboardPage
 ## 11. Implementation Steps
 1. Create `src/components/DashboardPage.tsx` as a React component.
 2. Implement `useTournaments` hook in `src/lib/hooks/useTournaments.ts`.
-3. Build `TournamentCard.tsx` in `src/components/TournamentCard.tsx`.
-4. Build `DeleteConfirmationDialog.tsx` in `src/components/DeleteConfirmationDialog.tsx` using Shadcn/ui.
-5. Build `PaginationControls.tsx` in `src/components/PaginationControls.tsx`.
-6. Build `DashboardEmptyState.tsx` in `src/components/DashboardEmptyState.tsx` with Heroicons.
-7. Update `src/pages/index.astro` to import and render `DashboardPage` with client directive (`client:load`).
-8. Style components with Tailwind and ensure responsiveness.
-9. Test interactions: loading, empty, pagination, deletion flows.
-10. Add keyboard and ARIA attributes for accessibility.
-11. Review and refactor code, add unit tests.
+3. Build `DashboardHeader.tsx` in `src/components/DashboardHeader.tsx` with "Create Tournament" button.
+4. Build `TournamentCard.tsx` in `src/components/TournamentCard.tsx`.
+5. Build `DeleteConfirmationDialog.tsx` in `src/components/DeleteConfirmationDialog.tsx` using Shadcn/ui.
+6. Build `PaginationControls.tsx` in `src/components/PaginationControls.tsx`.
+7. Build `DashboardEmptyState.tsx` in `src/components/DashboardEmptyState.tsx` with Heroicons and "Create Tournament" button.
+8. Update `src/pages/index.astro` to import and render `DashboardPage` with client directive (`client:load`).
+9. Style components with Tailwind and ensure responsiveness.
+10. Test interactions: loading, empty, pagination, deletion flows, and navigation to create page.
+11. Add keyboard and ARIA attributes for accessibility.
+12. Review and refactor code, add unit tests.

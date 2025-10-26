@@ -1,0 +1,10 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { TournamentWizard } from "@/components/TournamentWizard";
+
+export const prerender = false;
+---
+
+<Layout title="Create Tournament - Tennis Scheduler">
+  <TournamentWizard client:load />
+</Layout>

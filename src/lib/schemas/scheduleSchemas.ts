@@ -25,4 +25,3 @@ export const updateScheduleMatchesSchema = z.object({
  * Schema for validating schedule ID path parameter
  */
 export const scheduleIdParamSchema = z.string().uuid({ message: "Invalid schedule ID format" });
-

@@ -11,6 +11,26 @@ export function ForgotPasswordForm() {
     e.preventDefault();
     setError(null);
     setMessage(null);
+
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
+
+      setMessage("Password reset link sent. Please check your email.");
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
 
   return (

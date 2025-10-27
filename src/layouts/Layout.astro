@@ -1,5 +1,5 @@
 ---
-import { UserMenu } from "../components/UserMenu";
+import { UserMenu, type UserMenuProps } from "../components/UserMenu";
 import "../styles/global.css";
 
 interface Props {
@@ -7,7 +7,14 @@ interface Props {
 }
 
 const { title = "AI Tennis Scheduler" } = Astro.props;
-const isAuthenticated = false;
+const { user } = Astro.locals;
+const isAuthenticated = !!user;
+
+const userMenuProps: UserMenuProps = {
+  user: {
+    email: user?.email,
+  },
+};
 ---
 
 <!doctype html>
@@ -28,7 +35,7 @@ const isAuthenticated = false;
         <nav>
           {
             isAuthenticated ? (
-              <UserMenu client:load />
+              <UserMenu client:load {...userMenuProps} />
             ) : (
               <div class="flex items-center space-x-4">
                 <a href="/login" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600">

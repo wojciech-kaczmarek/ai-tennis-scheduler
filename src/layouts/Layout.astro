@@ -1,11 +1,13 @@
 ---
+import { UserMenu } from "../components/UserMenu";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
 }
 
-const { title = "10x Astro Starter" } = Astro.props;
+const { title = "AI Tennis Scheduler" } = Astro.props;
+const isAuthenticated = false;
 ---
 
 <!doctype html>
@@ -17,8 +19,36 @@ const { title = "10x Astro Starter" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
-    <slot />
+  <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <header class="bg-white dark:bg-gray-800 shadow-md px-4 py-3">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="/" class="text-xl font-bold">
+          {title}
+        </a>
+        <nav>
+          {
+            isAuthenticated ? (
+              <UserMenu client:load />
+            ) : (
+              <div class="flex items-center space-x-4">
+                <a href="/login" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600">
+                  Login
+                </a>
+                <a
+                  href="/register"
+                  class="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md"
+                >
+                  Register
+                </a>
+              </div>
+            )
+          }
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
   </body>
 </html>
 

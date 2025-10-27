@@ -1,0 +1,12 @@
+---
+import AuthLayout from "@/layouts/AuthLayout.astro";
+import { RegisterForm } from "@/components/auth/RegisterForm";
+---
+
+<AuthLayout title="Create Account">
+  <RegisterForm client:load />
+  <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+    Already have an account?
+    <a href="/login" class="font-medium text-blue-600 hover:text-blue-500"> Sign in </a>
+  </p>
+</AuthLayout>

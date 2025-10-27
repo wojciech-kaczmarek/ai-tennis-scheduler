@@ -153,3 +153,5 @@ export function TournamentDetails({ tournamentId }: TournamentDetailsProps) {
   );
 }
 
+
+

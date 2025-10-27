@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 import { generateScheduleSchema } from "../../../lib/schemas/generateScheduleSchemas";
 import { generateSchedule } from "../../../lib/services/scheduleService";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import type { GeneratedScheduleDTO } from "../../../types";
-import { DEFAULT_USER_ID } from "@/db/supabase.client.ts";
 
 /**
  * POST /api/schedules/generate
@@ -19,9 +19,21 @@ import { DEFAULT_USER_ID } from "@/db/supabase.client.ts";
  */
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    const userId = DEFAULT_USER_ID;
+    const supabase = createSupabaseServerInstance({
+      cookies,
+      headers: request.headers,
+    });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
 
     // Parse request body
     let body;

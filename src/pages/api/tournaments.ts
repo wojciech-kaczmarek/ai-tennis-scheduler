@@ -1,11 +1,14 @@
 import type { APIRoute } from "astro";
-import { listTournamentsQuerySchema, createTournamentSchema } from "../../lib/schemas/tournamentSchemas";
+import {
+  listTournamentsQuerySchema,
+  createTournamentSchema,
+} from "../../lib/schemas/tournamentSchemas";
 import {
   getTournamentsForUser,
   validateTournamentBusinessRules,
   createTournamentWithSchedule,
-} from "../../lib/services/tournamentService";
-import { DEFAULT_USER_ID } from "@/db/supabase.client";
+} from "@/lib/services/tournamentService";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 
 /**
  * GET /api/tournaments
@@ -23,10 +26,21 @@ import { DEFAULT_USER_ID } from "@/db/supabase.client";
  * - 401: User not authenticated
  * - 500: Internal server error
  */
-export const GET: APIRoute = async ({ request, locals }) => {
+export const GET: APIRoute = async ({ request, cookies }) => {
   try {
-    const userId = DEFAULT_USER_ID;
+    const supabase = createSupabaseServerInstance({
+      cookies,
+      headers: request.headers,
+    });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
     // 2. Parse and validate query parameters
     const url = new URL(request.url);
     const queryParams = {
@@ -55,7 +69,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
     const validatedQuery = validation.data;
 
     // 3. Call service to fetch tournaments
-    const result = await getTournamentsForUser(locals.supabase, userId, validatedQuery);
+    const result = await getTournamentsForUser(
+      supabase,
+      user.id,
+      validatedQuery
+    );
 
     // 4. Return successful response
     return new Response(JSON.stringify(result), {
@@ -97,8 +115,20 @@ export const GET: APIRoute = async ({ request, locals }) => {
  * - 422: Business validation failed
  * - 500: Internal server error
  */
-export const POST: APIRoute = async ({ request, locals }) => {
-  const userId = DEFAULT_USER_ID;
+export const POST: APIRoute = async ({ request, cookies }) => {
+  const supabase = createSupabaseServerInstance({
+    cookies,
+    headers: request.headers,
+  });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
+  }
 
   // Step 2: Parse request body
   let requestBody;
@@ -150,7 +180,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // Step 5: Create tournament via service
   try {
-    const createdTournament = await createTournamentWithSchedule(userId, validatedData, locals.supabase);
+    const createdTournament = await createTournamentWithSchedule(
+      user.id,
+      validatedData,
+      supabase
+    );
 
     return new Response(JSON.stringify(createdTournament), {
       status: 201,

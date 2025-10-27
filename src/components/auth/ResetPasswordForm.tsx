@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function ResetPasswordForm() {
   const [password, setPassword] = useState("");
@@ -21,36 +21,18 @@ export function ResetPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{error}</div>}
       {message && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-          {message}
-        </div>
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">{message}</div>
       )}
       <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
+        <label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           New Password
         </label>
-        <Input
-          id="password"
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <div className="space-y-2">
-        <label
-          htmlFor="confirm-password"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
+        <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Confirm New Password
         </label>
         <Input

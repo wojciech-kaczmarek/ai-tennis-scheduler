@@ -14,32 +14,30 @@ const PUBLIC_PATHS = [
   "/api/auth/reset-password",
 ];
 
-export const onRequest = defineMiddleware(
-  async ({ locals, cookies, url, request, redirect }, next) => {
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
-    });
+export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
+  const supabase = createSupabaseServerInstance({
+    cookies,
+    headers: request.headers,
+  });
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    if (user) {
-      locals.user = {
-        email: user.email,
-        id: user.id,
-      };
-    }
-
-    if (user && AUTH_PATHS.includes(url.pathname)) {
-      return redirect("/");
-    }
-
-    if (!user && !PUBLIC_PATHS.includes(url.pathname)) {
-      return redirect("/login");
-    }
-
-    return next();
+  if (user) {
+    locals.user = {
+      email: user.email,
+      id: user.id,
+    };
   }
-);
+
+  if (user && AUTH_PATHS.includes(url.pathname)) {
+    return redirect("/");
+  }
+
+  if (!user && !PUBLIC_PATHS.includes(url.pathname)) {
+    return redirect("/login");
+  }
+
+  return next();
+});

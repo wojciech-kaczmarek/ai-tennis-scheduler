@@ -11,25 +11,21 @@ import type { ScheduleEditorProps } from "@/lib/viewModels/tournamentDetailsView
 
 /**
  * ScheduleEditor Component
- * 
+ *
  * Manages schedule editing state, validates changes, detects conflicts,
  * and handles save/cancel operations. Delegates display to ScheduleGrid.
- * 
+ *
  * Features:
  * - Track changes to match court assignments and order
  * - Real-time conflict detection
  * - Save changes with automatic rollback on failure
  * - Cancel changes to revert to original state
- * 
+ *
  * @param schedule - Schedule data with matches
  * @param maxCourts - Maximum number of courts available
  * @param onSaveSuccess - Callback to trigger after successful save (usually refetch)
  */
-export function ScheduleEditor({
-  schedule,
-  maxCourts,
-  onSaveSuccess,
-}: ScheduleEditorProps) {
+export function ScheduleEditor({ schedule, maxCourts, onSaveSuccess }: ScheduleEditorProps) {
   const {
     displayMatches,
     isDirty,
@@ -76,22 +72,13 @@ export function ScheduleEditor({
       {/* Header with title and action buttons */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Match Schedule</h2>
-        
+
         {isDirty && (
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isSaving}
-              aria-label="Cancel changes"
-            >
+            <Button variant="outline" onClick={handleCancel} disabled={isSaving} aria-label="Cancel changes">
               Cancel
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving || hasConflicts}
-              aria-label="Save changes"
-            >
+            <Button onClick={handleSave} disabled={isSaving || hasConflicts} aria-label="Save changes">
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </div>
@@ -108,9 +95,7 @@ export function ScheduleEditor({
                 <div key={index}>{conflict.message}</div>
               ))}
             </div>
-            <p className="mt-2 text-sm">
-              Please resolve these conflicts before saving.
-            </p>
+            <p className="mt-2 text-sm">Please resolve these conflicts before saving.</p>
           </AlertDescription>
         </Alert>
       )}
@@ -124,20 +109,12 @@ export function ScheduleEditor({
       )}
 
       {/* Schedule grid with editable controls */}
-      <ScheduleGrid
-        matches={displayMatches}
-        editable={true}
-        maxCourts={maxCourts}
-        onMatchUpdate={updateMatch}
-      />
+      <ScheduleGrid matches={displayMatches} editable={true} maxCourts={maxCourts} onMatchUpdate={updateMatch} />
 
       {/* Helper text for users */}
       {!isDirty && displayMatches.length > 0 && (
-        <p className="text-sm text-muted-foreground mt-4">
-          Edit court assignments or match order to make changes.
-        </p>
+        <p className="text-sm text-muted-foreground mt-4">Edit court assignments or match order to make changes.</p>
       )}
     </div>
   );
 }
-

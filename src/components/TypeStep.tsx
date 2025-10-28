@@ -15,10 +15,18 @@ export const TypeStep = ({ value, onChange }: TypeStepProps) => {
 
       <div className="space-y-4" role="radiogroup" aria-label="Tournament type">
         <div
+          role="radio"
+          aria-checked={value === "singles"}
+          tabIndex={0}
           className={`relative flex cursor-pointer rounded-lg border p-4 transition-all hover:border-primary ${
             value === "singles" ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-input"
           }`}
           onClick={() => onChange("singles")}
+          onKeyDown={(e) => {
+            if (e.key === " " || e.key === "Enter") {
+              onChange("singles");
+            }
+          }}
         >
           <div className="flex items-start space-x-3">
             <input
@@ -43,10 +51,18 @@ export const TypeStep = ({ value, onChange }: TypeStepProps) => {
         </div>
 
         <div
+          role="radio"
+          aria-checked={value === "doubles"}
+          tabIndex={0}
           className={`relative flex cursor-pointer rounded-lg border p-4 transition-all hover:border-primary ${
             value === "doubles" ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-input"
           }`}
           onClick={() => onChange("doubles")}
+          onKeyDown={(e) => {
+            if (e.key === " " || e.key === "Enter") {
+              onChange("doubles");
+            }
+          }}
         >
           <div className="flex items-start space-x-3">
             <input

@@ -16,16 +16,12 @@ interface UseTournamentDetailsResult {
 /**
  * Hook for fetching tournament details from the API
  * Handles loading states, errors, and provides refetch capability
- * 
+ *
  * @param tournamentId - The ID of the tournament to fetch
  * @returns Tournament data, loading state, error state, and refetch function
  */
-export function useTournamentDetails(
-  tournamentId: string
-): UseTournamentDetailsResult {
-  const [tournament, setTournament] = useState<TournamentDetailDTO | null>(
-    null
-  );
+export function useTournamentDetails(tournamentId: string): UseTournamentDetailsResult {
+  const [tournament, setTournament] = useState<TournamentDetailDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,8 +51,7 @@ export function useTournamentDetails(
       const data: TournamentDetailDTO = await response.json();
       setTournament(data);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
       setError(errorMessage);
       console.error("Error fetching tournament:", err);
     } finally {
@@ -75,6 +70,3 @@ export function useTournamentDetails(
     refetch: fetchTournament,
   };
 }
-
-
-

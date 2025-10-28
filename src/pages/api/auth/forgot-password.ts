@@ -25,10 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  return new Response(
-    JSON.stringify({ message: "Password reset link sent successfully" }),
-    {
-      status: 200,
-    }
-  );
+  return new Response(JSON.stringify({ message: "Password reset link sent successfully" }), {
+    status: 200,
+  });
 };

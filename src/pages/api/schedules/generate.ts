@@ -2,7 +2,6 @@ import type { APIRoute } from "astro";
 import { generateScheduleSchema } from "../../../lib/schemas/generateScheduleSchemas";
 import { generateSchedule } from "../../../lib/services/scheduleService";
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import type { GeneratedScheduleDTO } from "../../../types";
 
 /**
  * POST /api/schedules/generate
@@ -39,7 +38,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     let body;
     try {
       body = await request.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: "Bad Request",

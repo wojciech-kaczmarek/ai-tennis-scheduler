@@ -26,23 +26,20 @@ export function LoginForm() {
       }
 
       window.location.href = "/";
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">{error}</div>}
       <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
+        <label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Email
         </label>
         <Input
@@ -55,19 +52,10 @@ export function LoginForm() {
         />
       </div>
       <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
+        <label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Password
         </label>
-        <Input
-          id="password"
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       <Button type="submit" className="w-full">
         Sign In

@@ -269,7 +269,7 @@ export async function updateScheduleMatches(
 
   // Check if all requested matches were found
   if (!matchesInSchedule || matchesInSchedule.length !== matchIds.length) {
-    const foundIds = new Set(matchesInSchedule?.map((m) => m.id) || []);
+    const foundIds = new Set(matchesInSchedule?.map((m: { id: string }) => m.id) || []);
     const missingId = matchIds.find((id) => !foundIds.has(id));
     throw new Error(`Match ${missingId} does not belong to schedule`);
   }

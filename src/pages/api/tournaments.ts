@@ -1,8 +1,5 @@
 import type { APIRoute } from "astro";
-import {
-  listTournamentsQuerySchema,
-  createTournamentSchema,
-} from "../../lib/schemas/tournamentSchemas";
+import { listTournamentsQuerySchema, createTournamentSchema } from "../../lib/schemas/tournamentSchemas";
 import {
   getTournamentsForUser,
   validateTournamentBusinessRules,
@@ -69,11 +66,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     const validatedQuery = validation.data;
 
     // 3. Call service to fetch tournaments
-    const result = await getTournamentsForUser(
-      supabase,
-      user.id,
-      validatedQuery
-    );
+    const result = await getTournamentsForUser(supabase, user.id, validatedQuery);
 
     // 4. Return successful response
     return new Response(JSON.stringify(result), {
@@ -180,11 +173,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   // Step 5: Create tournament via service
   try {
-    const createdTournament = await createTournamentWithSchedule(
-      user.id,
-      validatedData,
-      supabase
-    );
+    const createdTournament = await createTournamentWithSchedule(user.id, validatedData, supabase);
 
     return new Response(JSON.stringify(createdTournament), {
       status: 201,

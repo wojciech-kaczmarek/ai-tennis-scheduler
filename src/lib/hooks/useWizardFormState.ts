@@ -6,9 +6,7 @@ const STORAGE_STEP_KEY = "tournament_wizard_current_step";
 
 interface UseWizardFormStateReturn {
   formData: WizardFormData;
-  setFormData: (
-    data: WizardFormData | ((prev: WizardFormData) => WizardFormData)
-  ) => void;
+  setFormData: (data: WizardFormData | ((prev: WizardFormData) => WizardFormData)) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
   clearFormData: () => void;
@@ -129,4 +127,3 @@ export const useWizardFormState = (): UseWizardFormStateReturn => {
     clearFormData,
   };
 };
-

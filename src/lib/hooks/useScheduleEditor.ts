@@ -34,7 +34,7 @@ interface UseScheduleEditorResult {
 /**
  * Detects conflicts in match scheduling
  * Checks for duplicate (court_number, match_order_on_court) pairs
- * 
+ *
  * @param matches - Array of matches to check for conflicts
  * @returns Array of detected conflicts
  */
@@ -63,7 +63,7 @@ function detectConflicts(matches: MatchDTO[]): ConflictInfo[] {
 /**
  * Hook for managing schedule editing operations
  * Handles state tracking, validation, conflict detection, and API persistence
- * 
+ *
  * @param params - Configuration including schedule ID, initial matches, and court limit
  * @returns Editing state, display data, and control functions
  */
@@ -73,9 +73,7 @@ export function useScheduleEditor({
   maxCourts,
 }: UseScheduleEditorParams): UseScheduleEditorResult {
   const [originalMatches] = useState<MatchDTO[]>(initialMatches);
-  const [editedMatches, setEditedMatches] = useState<
-    Map<string, UpdateMatchDTO>
-  >(new Map());
+  const [editedMatches, setEditedMatches] = useState<Map<string, UpdateMatchDTO>>(new Map());
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -127,9 +125,7 @@ export function useScheduleEditor({
       // Validate the new value based on field type
       if (field === "court") {
         if (value < 1 || value > maxCourts) {
-          console.error(
-            `Invalid court number ${value}. Must be between 1 and ${maxCourts}`
-          );
+          console.error(`Invalid court number ${value}. Must be between 1 and ${maxCourts}`);
           return;
         }
       } else if (field === "order") {
@@ -143,8 +139,7 @@ export function useScheduleEditor({
       const existingEdit = editedMatches.get(matchId);
       const newEdit: UpdateMatchDTO = {
         match_id: matchId,
-        court_number:
-          field === "court" ? value : (existingEdit?.court_number ?? currentMatch.court_number),
+        court_number: field === "court" ? value : (existingEdit?.court_number ?? currentMatch.court_number),
         match_order_on_court:
           field === "order" ? value : (existingEdit?.match_order_on_court ?? currentMatch.match_order_on_court),
       };
@@ -206,9 +201,7 @@ export function useScheduleEditor({
       if (!response.ok) {
         if (response.status === 400) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(
-            errorData.message || "Invalid data. Please check your changes."
-          );
+          throw new Error(errorData.message || "Invalid data. Please check your changes.");
         }
         if (response.status === 401) {
           throw new Error("Unauthorized. Please log in again.");
@@ -217,9 +210,7 @@ export function useScheduleEditor({
           throw new Error("Schedule not found. It may have been deleted.");
         }
         if (response.status === 409) {
-          throw new Error(
-            "Conflict detected on server. Changes have been discarded."
-          );
+          throw new Error("Conflict detected on server. Changes have been discarded.");
         }
         throw new Error("Failed to save changes. Please try again.");
       }
@@ -236,12 +227,11 @@ export function useScheduleEditor({
     } catch (err) {
       // On error, keep editedMatches intact (no rollback of state)
       // User can see error and decide to retry or cancel
-      const errorMessage =
-        err instanceof Error ? err.message : "Unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
       setSaveError(errorMessage);
       setIsSaving(false);
       console.error("Error saving schedule changes:", err);
-      
+
       // Re-throw to allow parent component to handle success/failure
       throw err;
     }
@@ -269,4 +259,3 @@ export function useScheduleEditor({
     cancelChanges,
   };
 }
-

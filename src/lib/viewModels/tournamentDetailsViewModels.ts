@@ -4,14 +4,7 @@
 // This file contains all view model types for the Tournament Details view
 // These types define the shape of component props and internal state
 
-import type {
-  TournamentDetailDTO,
-  PlayerDTO,
-  ScheduleDTO,
-  MatchDTO,
-  UpdateMatchDTO,
-  TournamentType,
-} from "@/types";
+import type { TournamentDetailDTO, PlayerDTO, ScheduleDTO, MatchDTO, UpdateMatchDTO, TournamentType } from "@/types";
 
 /**
  * View state for TournamentDetails component
@@ -85,12 +78,5 @@ export interface ScheduleGridProps {
   matches: MatchDTO[];
   editable: boolean;
   maxCourts?: number;
-  onMatchUpdate?: (
-    matchId: string,
-    field: "court" | "order",
-    value: number
-  ) => void;
+  onMatchUpdate?: (matchId: string, field: "court" | "order", value: number) => void;
 }
-
-
-

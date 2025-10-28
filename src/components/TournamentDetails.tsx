@@ -47,15 +47,7 @@ function LoadingSkeleton() {
  * Error display component
  * Shows error message with action buttons
  */
-function ErrorDisplay({
-  error,
-  onBack,
-  onRetry,
-}: {
-  error: string;
-  onBack: () => void;
-  onRetry: () => void;
-}) {
+function ErrorDisplay({ error, onBack, onRetry }: { error: string; onBack: () => void; onRetry: () => void }) {
   return (
     <div className="container mx-auto py-8">
       <Alert variant="destructive" className="mb-4">
@@ -76,22 +68,21 @@ function ErrorDisplay({
 
 /**
  * TournamentDetails Component
- * 
+ *
  * Main container component that orchestrates the tournament details view.
  * Handles data fetching, loading states, errors, and coordinates all child components.
- * 
+ *
  * Features:
  * - Fetches tournament data on mount
  * - Displays loading state while fetching
  * - Handles error states with user-friendly messages
  * - Renders header, players list, and editable schedule
  * - Manages navigation back to dashboard
- * 
+ *
  * @param tournamentId - ID of the tournament to display
  */
 export function TournamentDetails({ tournamentId }: TournamentDetailsProps) {
-  const { tournament, isLoading, error, refetch } =
-    useTournamentDetails(tournamentId);
+  const { tournament, isLoading, error, refetch } = useTournamentDetails(tournamentId);
 
   /**
    * Navigate back to dashboard
@@ -121,13 +112,7 @@ export function TournamentDetails({ tournamentId }: TournamentDetailsProps) {
 
   // No tournament data (should not happen if no error, but defensive check)
   if (!tournament) {
-    return (
-      <ErrorDisplay
-        error="Tournament data not available"
-        onBack={handleBack}
-        onRetry={refetch}
-      />
-    );
+    return <ErrorDisplay error="Tournament data not available" onBack={handleBack} onRetry={refetch} />;
   }
 
   // Success state - render full tournament details
@@ -144,14 +129,7 @@ export function TournamentDetails({ tournamentId }: TournamentDetailsProps) {
 
       <PlayersList players={tournament.players} />
 
-      <ScheduleEditor
-        schedule={tournament.schedule}
-        maxCourts={tournament.courts}
-        onSaveSuccess={handleSaveSuccess}
-      />
+      <ScheduleEditor schedule={tournament.schedule} maxCourts={tournament.courts} onSaveSuccess={handleSaveSuccess} />
     </div>
   );
 }
-
-
-

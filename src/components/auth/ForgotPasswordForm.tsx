@@ -28,8 +28,12 @@ export function ForgotPasswordForm() {
       }
 
       setMessage("Password reset link sent. Please check your email.");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

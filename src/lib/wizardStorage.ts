@@ -8,7 +8,7 @@ const STORAGE_STEP_KEY = "tournament_wizard_current_step";
 /**
  * Clear wizard form data from localStorage
  * Ensures the wizard starts fresh when creating a new tournament
- * 
+ *
  * This should be called when:
  * - User explicitly clicks "Create Tournament" button
  * - User successfully creates a tournament
@@ -21,6 +21,3 @@ export const clearWizardStorage = () => {
     console.error("Error clearing wizard storage:", error);
   }
 };
-
-
-

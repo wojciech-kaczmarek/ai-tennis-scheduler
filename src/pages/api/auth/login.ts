@@ -1,17 +1,14 @@
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   const { email, password } = await request.json();
 
   if (!email || !password) {
     return new Response(JSON.stringify({ error: "Email and password are required" }), { status: 400 });
   }
 
-  const supabase = createSupabaseServerInstance({
-    cookies,
-    headers: request.headers,
-  });
+  // Use Supabase instance from locals (created in middleware)
+  const { supabase } = locals;
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,

@@ -15,14 +15,15 @@ const PUBLIC_PATHS = [
 ];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
-  const supabase = createSupabaseServerInstance({
+  // Create Supabase instance once and attach to locals for reuse across the request
+  locals.supabase = createSupabaseServerInstance({
     cookies,
     headers: request.headers,
   });
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await locals.supabase.auth.getUser();
 
   if (user) {
     locals.user = {

@@ -5,7 +5,6 @@ import {
   validateTournamentBusinessRules,
   createTournamentWithSchedule,
 } from "@/lib/services/tournamentService";
-import { createSupabaseServerInstance } from "@/db/supabase.client";
 
 /**
  * GET /api/tournaments
@@ -23,15 +22,10 @@ import { createSupabaseServerInstance } from "@/db/supabase.client";
  * - 401: User not authenticated
  * - 500: Internal server error
  */
-export const GET: APIRoute = async ({ request, cookies }) => {
+export const GET: APIRoute = async ({ request, locals }) => {
   try {
-    const supabase = createSupabaseServerInstance({
-      cookies,
-      headers: request.headers,
-    });
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // Use Supabase instance from locals (created in middleware)
+    const { supabase, user } = locals;
 
     if (!user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -108,14 +102,9 @@ export const GET: APIRoute = async ({ request, cookies }) => {
  * - 422: Business validation failed
  * - 500: Internal server error
  */
-export const POST: APIRoute = async ({ request, cookies }) => {
-  const supabase = createSupabaseServerInstance({
-    cookies,
-    headers: request.headers,
-  });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const POST: APIRoute = async ({ request, locals }) => {
+  // Use Supabase instance from locals (created in middleware)
+  const { supabase, user } = locals;
 
   if (!user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {

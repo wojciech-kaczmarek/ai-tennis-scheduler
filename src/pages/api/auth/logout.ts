@@ -1,13 +1,9 @@
 import type { APIRoute } from "astro";
-import { createSupabaseServerInstance } from "../../../db/supabase.client";
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ cookies, redirect, request }) => {
-  const supabase = createSupabaseServerInstance({
-    cookies,
-    headers: request.headers,
-  });
-  await supabase.auth.signOut();
+export const POST: APIRoute = async ({ redirect, locals }) => {
+  // Use Supabase instance from locals (created in middleware)
+  await locals.supabase.auth.signOut();
   return redirect("/login");
 };

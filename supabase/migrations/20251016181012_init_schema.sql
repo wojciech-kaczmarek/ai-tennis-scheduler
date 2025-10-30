@@ -17,7 +17,7 @@ create type public.tournament_type as enum ('singles', 'doubles');
 -- table: public.tournaments
 -- stores tournament information created by users.
 create table public.tournaments (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default gen_random_uuid(),
     user_id uuid not null references auth.users(id),
     name text not null,
     type public.tournament_type not null,
@@ -30,7 +30,7 @@ comment on table public.tournaments is 'stores tournament information created by
 -- table: public.players
 -- stores player information for each tournament.
 create table public.players (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default gen_random_uuid(),
     tournament_id uuid not null references public.tournaments(id) on delete cascade,
     name text,
     placeholder_name text not null
@@ -40,7 +40,7 @@ comment on table public.players is 'stores player information for each tournamen
 -- table: public.schedules
 -- stores the generated schedule for a tournament.
 create table public.schedules (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default gen_random_uuid(),
     tournament_id uuid not null unique references public.tournaments(id) on delete cascade
 );
 comment on table public.schedules is 'stores the generated schedule for a tournament.';
@@ -48,7 +48,7 @@ comment on table public.schedules is 'stores the generated schedule for a tourna
 -- table: public.matches
 -- stores individual matches within a schedule.
 create table public.matches (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default gen_random_uuid(),
     schedule_id uuid not null references public.schedules(id) on delete cascade,
     court_number smallint not null,
     match_order_on_court smallint not null,
@@ -59,7 +59,7 @@ comment on table public.matches is 'stores individual matches within a schedule.
 -- table: public.match_players
 -- a junction table linking players to matches.
 create table public.match_players (
-    id uuid primary key default uuid_generate_v4(),
+    id uuid primary key default gen_random_uuid(),
     match_id uuid not null references public.matches(id) on delete cascade,
     player_id uuid not null references public.players(id) on delete cascade,
     team smallint

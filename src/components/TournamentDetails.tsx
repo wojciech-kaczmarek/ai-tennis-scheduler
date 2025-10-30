@@ -133,3 +133,7 @@ export function TournamentDetails({ tournamentId }: TournamentDetailsProps) {
     </div>
   );
 }
+
+
+
+

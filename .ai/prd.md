@@ -41,8 +41,9 @@ Główną grupą docelową są nieformalne grupy znajomych oraz organizatorzy ma
 
 Algorytm generujący harmonogram kieruje się następującymi priorytetami:
 
-1.  **Priorytet 1:** Unikanie sytuacji, w której ten sam zawodnik gra kilka meczów z rzędu.
-2.  **Priorytet 2:** Optymalne rozłożenie gier na dostępnych kortach, aby zminimalizować ich bezczynność.
+1.  **Priorytet 1:** Ten sam zawodnik w tej samej rundzie nie może brać udziału w meczach na dwóch różnych kortach.
+2.  **Priorytet 2:** Unikanie sytuacji, w której ten sam zawodnik gra kilka meczów z rzędu.
+3.  **Priorytet 3:** Optymalne rozłożenie gier na dostępnych kortach, aby zminimalizować ich bezczynność.
 
 - Jeśli idealny harmonogram jest niemożliwy do osiągnięcia, system generuje najlepszy możliwy wariant i informuje o tym użytkownika.
 

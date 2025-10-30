@@ -1,5 +1,6 @@
 ---
 import { UserMenu, type UserMenuProps } from "../components/UserMenu";
+import { ThemeToggleButton } from "../components/ThemeToggleButton";
 import "../styles/global.css";
 
 interface Props {
@@ -32,10 +33,13 @@ const userMenuProps: UserMenuProps = {
         <a href="/" class="text-xl font-bold">
           {title}
         </a>
-        <nav>
+        <nav class="flex items-center gap-4">
           {
             isAuthenticated ? (
-              <UserMenu client:load {...userMenuProps} />
+              <>
+                <UserMenu client:load {...userMenuProps} />
+                <ThemeToggleButton client:load />
+              </>
             ) : (
               <div class="flex items-center space-x-4">
                 <a href="/login" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600">
@@ -47,6 +51,7 @@ const userMenuProps: UserMenuProps = {
                 >
                   Register
                 </a>
+                <ThemeToggleButton client:load />
               </div>
             )
           }

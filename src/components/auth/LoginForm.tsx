@@ -49,15 +49,23 @@ export function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          data-testid="email-input"
         />
       </div>
       <div className="space-y-2">
         <label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Password
         </label>
-        <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input
+          id="password"
+          type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          data-testid="password-input"
+        />
       </div>
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full" data-testid="login-button">
         Sign In
       </Button>
     </form>

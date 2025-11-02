@@ -39,9 +39,13 @@ export function RegisterForm() {
         throw new Error(data.error || "Something went wrong");
       }
 
-      window.location.href = "/login";
-    } catch (error: any) {
-      setError(error.message);
+      window.location.href = "/";
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

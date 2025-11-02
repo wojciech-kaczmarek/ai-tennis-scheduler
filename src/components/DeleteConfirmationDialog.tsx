@@ -32,7 +32,8 @@ export function DeleteConfirmationDialog({
         <DialogHeader>
           <DialogTitle>Delete Tournament</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete the tournament "{tournamentName}"? This action cannot be undone.
+            Are you sure you want to delete the tournament &quot;{tournamentName}&quot;? This action cannot be undone.
+            This will permanently delete the &quot;{tournamentName}&quot; tournament and all of its associated data.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

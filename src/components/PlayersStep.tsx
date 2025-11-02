@@ -63,7 +63,7 @@ export const PlayersStep = ({ players, tournamentType, onAdd, onRemove, onUpdate
         <div className="space-y-2">
           {players.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No players added yet. Click "Add Player" to start.</p>
+              <p>No players added yet. Click &quot;Add Player&quot; to start.</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -76,6 +76,7 @@ export const PlayersStep = ({ players, tournamentType, onAdd, onRemove, onUpdate
                     onChange={(e) => onUpdate(player.id, e.target.value)}
                     placeholder={player.placeholder_name}
                     aria-label={`Player ${index + 1} name`}
+                    data-testid={`player-input-${index}`}
                     className="flex-1 h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   <Button
@@ -84,6 +85,7 @@ export const PlayersStep = ({ players, tournamentType, onAdd, onRemove, onUpdate
                     size="icon"
                     onClick={() => onRemove(player.id)}
                     aria-label={`Remove ${player.name || player.placeholder_name}`}
+                    data-testid={`remove-player-button-${index}`}
                     className="h-9 w-9 text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     <Trash2Icon className="h-4 w-4" />
@@ -95,7 +97,14 @@ export const PlayersStep = ({ players, tournamentType, onAdd, onRemove, onUpdate
         </div>
 
         {/* Add player button */}
-        <Button type="button" variant="outline" onClick={onAdd} disabled={!canAddMore} className="w-full">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onAdd}
+          disabled={!canAddMore}
+          data-testid="add-player-button"
+          className="w-full"
+        >
           <PlusIcon className="mr-2 h-4 w-4" />
           Add Player
           {!canAddMore && ` (Maximum ${maxPlayers} reached)`}

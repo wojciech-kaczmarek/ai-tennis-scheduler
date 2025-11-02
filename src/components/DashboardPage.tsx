@@ -139,7 +139,12 @@ export function DashboardPage() {
       ) : (
         <>
           {/* Tournament grid */}
-          <div className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Tournament list">
+          <div
+            className="mb-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            role="list"
+            aria-label="Tournament list"
+            data-testid="tournaments-list"
+          >
             {tournaments.map((tournament) => (
               <div key={tournament.id} role="listitem">
                 <TournamentCard tournament={tournament} onDelete={handleDeleteClick} />

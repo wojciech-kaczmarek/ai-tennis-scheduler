@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "dev:e2e": "astro dev --mode test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

@@ -70,9 +70,3 @@ export function useTournamentDetails(tournamentId: string): UseTournamentDetails
     refetch: fetchTournament,
   };
 }
-
-
-
-
-
-

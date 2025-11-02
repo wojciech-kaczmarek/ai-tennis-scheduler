@@ -18,6 +18,7 @@ export const TypeStep = ({ value, onChange }: TypeStepProps) => {
           role="radio"
           aria-checked={value === "singles"}
           tabIndex={0}
+          data-testid="singles-radio"
           className={`relative flex cursor-pointer rounded-lg border p-4 transition-all hover:border-primary ${
             value === "singles" ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-input"
           }`}
@@ -54,6 +55,7 @@ export const TypeStep = ({ value, onChange }: TypeStepProps) => {
           role="radio"
           aria-checked={value === "doubles"}
           tabIndex={0}
+          data-testid="doubles-radio"
           className={`relative flex cursor-pointer rounded-lg border p-4 transition-all hover:border-primary ${
             value === "doubles" ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-input"
           }`}

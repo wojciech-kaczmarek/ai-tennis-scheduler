@@ -38,6 +38,7 @@ export const CourtsStep = ({ value, onChange }: CourtsStepProps) => {
             max={maxCourts}
             step={1}
             aria-label="Number of courts"
+            data-testid="courts-slider"
             className="w-full"
           />
           <div className="flex justify-between text-xs text-muted-foreground">

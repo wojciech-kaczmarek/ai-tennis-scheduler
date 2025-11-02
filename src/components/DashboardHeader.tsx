@@ -14,7 +14,12 @@ export function DashboardHeader() {
         <p className="mt-2 text-gray-600 dark:text-gray-400">Manage and view all your tennis tournaments</p>
       </div>
       <Button asChild variant="default">
-        <a href="/create" onClick={clearWizardStorage} aria-label="Create new tournament">
+        <a
+          href="/create"
+          onClick={clearWizardStorage}
+          aria-label="Create new tournament"
+          data-testid="create-tournament-button"
+        >
           <PlusIcon />
           Create Tournament
         </a>

@@ -11,6 +11,7 @@ export function DashboardEmptyState() {
       className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900"
       role="status"
       aria-live="polite"
+      data-testid="empty-state"
     >
       {/* Icon */}
       <Squares2X2Icon className="mb-4 h-16 w-16 text-gray-400 dark:text-gray-600" aria-hidden="true" />
@@ -23,7 +24,12 @@ export function DashboardEmptyState() {
 
       {/* Call to action button */}
       <Button asChild variant="default" size="lg">
-        <a href="/create" onClick={clearWizardStorage} aria-label="Create your first tournament">
+        <a
+          href="/create"
+          onClick={clearWizardStorage}
+          aria-label="Create your first tournament"
+          data-testid="create-tournament-button"
+        >
           <PlusIcon />
           Create Tournament
         </a>

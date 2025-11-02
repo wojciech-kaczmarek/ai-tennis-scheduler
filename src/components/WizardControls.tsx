@@ -32,6 +32,7 @@ export const WizardControls = ({
         onClick={onBack}
         disabled={isFirstStep}
         aria-label="Go to previous step"
+        data-testid="back-button"
         className="w-full sm:w-auto"
       >
         <ChevronLeftIcon className="mr-2 h-4 w-4" />
@@ -56,6 +57,7 @@ export const WizardControls = ({
           onClick={onSubmit}
           disabled={!isStepValid || isSubmitting}
           aria-label="Submit tournament"
+          data-testid="submit-button"
           className="w-full sm:w-auto"
         >
           <CheckIcon className="mr-2 h-4 w-4" />
@@ -67,6 +69,7 @@ export const WizardControls = ({
           onClick={onNext}
           disabled={!isStepValid}
           aria-label="Go to next step"
+          data-testid="next-button"
           className="w-full sm:w-auto"
         >
           Next

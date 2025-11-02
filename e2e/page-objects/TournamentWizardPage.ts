@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 
 export class TournamentWizardPage {
   readonly page: Page;
@@ -20,6 +20,7 @@ export class TournamentWizardPage {
   readonly nextButton: Locator;
   readonly backButton: Locator;
   readonly submitButton: Locator;
+  readonly schedulePreview: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -41,6 +42,7 @@ export class TournamentWizardPage {
     this.nextButton = page.getByTestId("next-button");
     this.backButton = page.getByTestId("back-button");
     this.submitButton = page.getByTestId("submit-button");
+    this.schedulePreview = page.getByTestId("schedule-preview");
   }
 
   getPlayerInput(index: number): Locator {
@@ -62,11 +64,6 @@ export class TournamentWizardPage {
   }
 
   async fillPlayersStep(players: string[]) {
-    // remove default players
-    for (let i = 3; i >= 0; i--) {
-      await this.page.getByTestId(`remove-player-button-${i}`).click();
-    }
-
     for (let i = 0; i < players.length; i++) {
       await this.addPlayerButton.click();
       await this.getPlayerInput(i).fill(players[i]);
@@ -75,6 +72,11 @@ export class TournamentWizardPage {
   }
 
   async fillCourtsStep() {
+    await this.nextButton.click();
+  }
+
+  async submitForm() {
+    await this.schedulePreview.waitFor({ state: "visible" });
     await this.submitButton.click();
   }
 }

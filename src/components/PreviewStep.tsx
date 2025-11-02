@@ -96,7 +96,7 @@ export const PreviewStep = ({ formData, onScheduleGenerated }: PreviewStepProps)
         <p className="text-muted-foreground">Review the AI-generated tournament schedule</p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-6" data-testid="schedule-preview">
         {courts.map((courtNumber) => {
           const courtMatches = matchesByCourt[courtNumber].sort(
             (a, b) => a.match_order_on_court - b.match_order_on_court

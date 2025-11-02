@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, cookies }) => {
   const { email, password } = await request.json();
 
   if (!email || !password) {
@@ -21,7 +21,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 
+  // After successful login, explicitly set the session
+  // This ensures cookies are properly set
+  if (data.session) {
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    });
+  }
+
   return new Response(JSON.stringify({ user: data.user }), {
     status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };

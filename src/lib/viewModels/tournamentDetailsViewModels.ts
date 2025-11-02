@@ -80,9 +80,3 @@ export interface ScheduleGridProps {
   maxCourts?: number;
   onMatchUpdate?: (matchId: string, field: "court" | "order", value: number) => void;
 }
-
-
-
-
-
-

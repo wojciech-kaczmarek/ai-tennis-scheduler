@@ -21,7 +21,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
   }
 
+  // After successful signup, explicitly set the session if auto-confirm is enabled
+  // This ensures cookies are properly set
+  if (data.session) {
+    await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    });
+  }
+
   return new Response(JSON.stringify({ user: data.user }), {
     status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };

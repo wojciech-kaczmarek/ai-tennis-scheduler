@@ -1,7 +1,7 @@
 export const ScheduleSkeleton = () => {
   return (
     <div className="space-y-6">
-      <div>
+      <div data-testid="schedule-preview-skeleton">
         <h2 className="text-2xl font-semibold mb-2">Schedule Preview</h2>
         <p className="text-muted-foreground">Generating your schedule...</p>
       </div>

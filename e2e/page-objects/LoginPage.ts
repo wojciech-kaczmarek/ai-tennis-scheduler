@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 
 export class LoginPage {
   readonly page: Page;
@@ -21,5 +21,8 @@ export class LoginPage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password_val);
     await this.loginButton.click();
+    // Wait for navigation to complete after successful login
+    await this.page.waitForURL("/", { timeout: 10000 });
   }
 }
+

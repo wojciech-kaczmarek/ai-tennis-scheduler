@@ -28,7 +28,7 @@ export function DashboardEmptyState() {
           href="/create"
           onClick={clearWizardStorage}
           aria-label="Create your first tournament"
-          data-testid="create-tournament-button"
+          data-testid="dashboard-create-tournament-button"
         >
           <PlusIcon />
           Create Tournament

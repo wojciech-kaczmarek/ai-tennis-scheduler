@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 
 export class DashboardPage {
   readonly page: Page;
@@ -21,3 +21,4 @@ export class DashboardPage {
     await this.createTournamentButton.click();
   }
 }
+

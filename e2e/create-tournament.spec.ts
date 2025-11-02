@@ -22,7 +22,7 @@ test.describe("Tournament Creation Flow", () => {
     }
 
     await loginPage.login(username, password);
-    await expect(page).toHaveURL("/");
+    // LoginPage.login() already waits for navigation to "/"
   });
 
   test("should allow a user to create a new tournament", async ({ page }) => {
@@ -45,7 +45,8 @@ test.describe("Tournament Creation Flow", () => {
     await wizardPage.fillPlayersStep(players);
     await wizardPage.fillCourtsStep();
 
-    // 5. Użytkownik tworzy turniej - handled by wizardPage.fillCourtsStep() which clicks submit
+    // 5. Użytkownik tworzy turniej
+    await wizardPage.submitForm();
 
     // 6. Turniej pojawia się na liście
     await expect(page).toHaveURL("/");

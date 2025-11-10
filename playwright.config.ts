@@ -8,6 +8,7 @@ export default {
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
   },
+  globalTeardown: "./e2e/playwright.teardown.ts",
   use: {
     baseURL: "http://localhost:3000",
   },

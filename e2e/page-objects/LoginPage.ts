@@ -25,4 +25,3 @@ export class LoginPage {
     await this.page.waitForURL("/", { timeout: 10000 });
   }
 }
-

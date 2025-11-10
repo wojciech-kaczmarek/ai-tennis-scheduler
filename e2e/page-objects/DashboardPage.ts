@@ -21,7 +21,3 @@ export class DashboardPage {
     await this.createTournamentButton.click();
   }
 }
-
-
-
-

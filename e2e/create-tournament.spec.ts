@@ -22,7 +22,6 @@ test.describe("Tournament Creation Flow", () => {
     }
 
     await loginPage.login(username, password);
-    // LoginPage.login() already waits for navigation to "/"
   });
 
   test("should allow a user to create a new tournament", async ({ page }) => {

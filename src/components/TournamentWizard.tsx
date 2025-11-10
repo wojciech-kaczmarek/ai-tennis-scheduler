@@ -117,8 +117,12 @@ export const TournamentWizard = () => {
 
   const isStepValid = (): boolean => {
     switch (currentStep) {
-      case 0: // Name step
-        return formData.name.trim().length > 0;
+      case 0: {
+        // Name step
+        const isNameValid = formData.name.trim().length > 0;
+        console.log("isNameValid", isNameValid);
+        return isNameValid;
+      }
       case 1: // Type step
         return formData.type === "singles" || formData.type === "doubles";
       case 2: {

@@ -24,12 +24,12 @@ export default async function globalTeardown(_config: FullConfig) {
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email: process.env.E2E_USERNAME!,
     password: process.env.E2E_PASSWORD!,
-});
+  });
 
-if (signInError) {
-  console.error('Error signing in:', signInError);
-  throw signInError;
-}
+  if (signInError) {
+    console.error("Error signing in:", signInError);
+    throw signInError;
+  }
 
   const { data, error } = await supabase
     .from("tournaments")
@@ -45,4 +45,3 @@ if (signInError) {
   const deletedCount = Array.isArray(data) ? data.length : 0;
   console.info(`[E2E teardown] Removed ${deletedCount} tournament record(s).`);
 }
-

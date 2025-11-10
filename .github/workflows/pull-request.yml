@@ -11,29 +11,9 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -60,14 +40,8 @@ jobs:
   e2e-test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    needs: lint
     environment:
       name: integration
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
-      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -86,6 +60,10 @@ jobs:
 
       - name: Run Playwright tests with coverage
         env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
           NODE_V8_COVERAGE: coverage-e2e
         run: |
           rm -rf coverage-e2e

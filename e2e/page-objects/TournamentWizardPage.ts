@@ -50,6 +50,9 @@ export class TournamentWizardPage {
   }
 
   async fillNameStep(name: string) {
+    await this.page.waitForSelector('[data-testid="tournament-name-input"][data-ready="true"]', {
+      state: "visible",
+    });
     await this.tournamentNameInput.fill(name);
     await this.nextButton.click();
   }
